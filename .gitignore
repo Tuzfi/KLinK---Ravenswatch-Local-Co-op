@@ -1,0 +1,8 @@
+# Arquivos de sessao e logs locais do KlinK (nao enviar ao repositorio)
+kit/mods/KlinK/lan-id.txt
+kit/mods/KlinK/backend.txt
+kit/mods/KlinK/host-ip.txt
+kit/mods/KlinK/lan-roster.txt
+kit/mods/KlinK/_log.txt
+**/LOCK
+*.log

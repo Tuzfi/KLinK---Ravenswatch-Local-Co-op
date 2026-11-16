@@ -1,0 +1,23 @@
+﻿{
+  "dotnetCommand": "dotnet",
+  "includePrereleases": true,
+  "temp": "../../../../.stormancer/tmp",
+  "nodeDir": "../../../../.stormancer/tmp/bin",
+  "skipRestore": false,
+  "debug": {
+
+    "symbols": "../../../../output/symbols",
+    "assemblies": "../../../../output/assemblies"
+  },
+  "packageSources": [
+    "https://api.nuget.org/v3/index.json",
+    "../../../../output/packages"
+  ],
+
+  "plugins": {
+    "Stormancer.Server.Node": "*-*",
+    "Stormancer.Elasticsearch": "*-*",
+    "Stormancer.Debugging": "*-*",
+    "Stormancer.Logging.Nlog": "*-*"
+  }
+}

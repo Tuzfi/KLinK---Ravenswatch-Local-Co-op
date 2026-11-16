@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Stormancer.CLI</id>
+    <version>5.4.2</version>
+    <authors>Stormancer.Server.Bootstrapper</authors>
+    <icon>icon.png</icon>
+    <projectUrl>https://www.stormancer.com/</projectUrl>
+    <description>Package Description</description>
+    <releaseNotes>Changed
+*******
+- Updated dependencies
+
+Fixed
+*****
+- Escape markup when displaying the content of json nodes in command results.</releaseNotes>
+    <packageTypes>
+      <packageType name="DotnetTool" />
+    </packageTypes>
+    <repository type="git" commit="6f7bd1b606311046cfb68a43111de96e8a7133de" />
+    <frameworkReferences>
+      <group targetFramework="net8.0">
+        <frameworkReference name="Microsoft.AspNetCore.App" />
+      </group>
+    </frameworkReferences>
+  </metadata>
+</package>

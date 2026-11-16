@@ -1,0 +1,257 @@
+﻿{
+
+  "constants": {
+    "host-ip": "127.0.0.1",
+    "publicIp": "{host-ip}",
+    "privateIp": "127.0.0.1",
+    "elasticHost": "127.0.0.1:9200",
+    "loadBalancedIp": "127.0.0.1",
+    "rootDirectory": "{workingDirectory}/../../../..",
+    "dataDirectory": "{rootDirectory}/data/{configName}",
+    "sharedDirectory": "{rootDirectory}/data/shared",
+    "cluster": "local",
+    "nodeId": "{configName}",
+    "n2nPort": "40245",
+    "apiHttpPort": "8082",
+    "apiHttpsPort": "443",
+    "adminApiHttpPort": "83",
+
+    "udpPort": "30102",
+    "tempDir": "{rootDirectory}/tmp/{configName}",
+    "localPackageSource": "{rootDirectory}/output/packages",
+    "localPluginPackageSource": "{Stormancer.LocalPluginPackagesPath}"
+  },
+  "configs": [
+    // Paths to protected files accessible only by the stormancer process. 
+    //The content of these files is added to constants at runtime.
+    //"{dataDirectory}/secrets/passwords.json"
+  ],
+  "security": {
+    "privateKeyStores": [
+      {
+        "path": "{dataDirectory}/secrets"
+      }
+    ]
+  },
+  //Elasticsearch DB connection config
+  "elasticsearch": {
+    "credentials": {
+      "basic": {
+        "login": "elastic",
+        "password": "kEdTrgEdLR30YZDLk3KknYn8"
+      }
+    },
+    //Elasticsearch endpoint. Defaults to "http://localhost:9200"
+    "endpoint": "http://{elasticHost}/"
+
+  },
+  "stats": {
+    "storage": [ "http://localhost:9200" ],
+    "index-template": "stats_{{0}}_{{1}}_{{2}}"
+  },
+  "git": {
+    //Directory containing git
+    "path": "../../../Standalone/git",
+    //Directory used to store the application repositories
+    "repositoriesDirectory": "{sharedDirectory}/repositories",
+    //Git home directory
+    "homeDirectory": "~/gitHome"
+
+  },
+  "webApis": {
+    "endpoints": {
+      "public": {
+        "ip": "*",
+        "port": "{apiHttpPort}",
+        "settings": {}
+      },
+      "private": {
+        "ip": "*",
+        "port": "{adminApiHttpPort}",
+        "settings": {}
+      }
+    },
+
+    "publicApi": {
+      "endpoints": [ "public" ],
+      "hosts": [],
+      "publish": [ "http://{loadBalancedIp}:{apiHttpPort}" ]
+    },
+
+    "adminApi": {
+      "endpoints": [ "private" ],
+      "hosts": [],
+      "publish": [ "http://127.0.0.1:{adminApiHttpPort}" ]
+    }
+  },
+
+  "identity": {
+    //Name of the node. Automatically generated if not specified here.
+    //It's recommanded to have different names for each node when running distributed.
+    "name": "{nodeId}",
+    "roles": [ "apps", "data", "leader" ]
+  },
+  //Contains the list of public endpoints to the node and their configuration.
+  "endpoints": {
+  },
+  "hosting": {
+    "packages": {
+      "applications": "{sharedDirectory}/apps",
+      "hostSources": [
+        "https://api.nuget.org/v3/index.json",
+        "{localPackageSource}"
+      ],
+      //Sources used during dotnet restore for server applications.
+      "sources": [
+        "https://api.nuget.org/v3/index.json",
+        "{localPackageSource}",
+        "{localPluginPackageSource}"
+      ]
+    },
+    "weight": 1,
+    "dataStorage": "{dataDirectory}/storage",
+    //Root directory where server applications are loaded.
+    //The directory of a specific app is : <appInstallDirectory>\<accountId>\<appName>\<deploymentId>
+    "applicationInstallDirectory": "{tempDir}/hosting/apps/",
+
+
+    //Set to true to launch the debugger whenever an host starts. Must be disabled in production.
+    "launchDebugger": true,
+    //Port range for application HTTP communications
+    "allowedPortsRange": "43200-43299",
+
+    "hostServerEndpoint": "127.0.0.1:42203",
+    "startupTimeout": 3600,
+    "gc": {
+      //Interval of time in seconds between two subsequent run of the server application GC.
+      "interval": 1,
+      //inactivity period in seconds before an application becomes eligible for GC.
+      "timeout": 600,
+      "statusTimeout": 3600
+    }
+  },
+
+
+  //Configuration for the geo IP plugin
+  "geoip": {
+    //Path to the geo ip db in the file system.
+    "db": "{dataDirectory}/geoip/GeoLite2-City.mmdb"
+  },
+
+  "cluster": {
+    //Id of the cluster. Defaults to 'default'
+    "name": "{cluster}",
+
+    //Does the cluster requires node authentication? If no, node 2 node communications are not encrypted, and federation is not possible.
+    //Setting to true requires configuring a private key.
+    "requireNodeAuthentication": false,
+
+    "coordination": {
+      "type": "discovery",
+      "endpoints": [ "127.0.0.1:40244" ],
+      "electionTimeout": {
+        "min": 800,
+        "max": 1200
+
+      },
+      "heartbeat": 500
+    },
+    //minimum number of votes required to elect a leader.
+    //configure this as more than half the number of nodes in the cluster to prevent split brain situations.
+    "minVotes": 2,
+    //Bindings for the cluster transport socket.
+    "endpoint": [ "{privateIp}:{n2nPort}" ],
+
+    //endpoint published to contact the node. The endpoint MUST be accessible from all nodes in the cluster. If not, connection edges establishment may fail.
+    "publishedEndpoint": "{privateIp}:{n2nPort}"
+  },
+
+  "federation": {
+    //Endpoint used by nodes of other clusters in the federation to connect to this node
+    //leave empty or set to null to prevent this node from accepting connections from nodes in other clusters.
+    "publicEndpoint": "{publicIp}:{n2nPort}",
+    "clusters": {
+      //List of endpoints to try to get metadata about the remote clusters
+      "endpoints": [ "http://{publicIp}:{adminApiHttpPort}" ],
+      //Paths containing the public keys authenticating each remote cluster (
+      "certificateSources": [
+        {
+          "path": "{dataDirectory}/certs"
+        }
+      ]
+    }
+  },
+  //nat traversal configuration (used to establish p2p communication between clients)
+  "p2p": {
+    //The number of p2p ping attempts that may be active at the same time between two peers.
+    "maxConcurrentPings": 8,
+    //
+    "enableRelay": true,
+    "forceRelay": true
+  },
+  "logging": {
+    "outputs": {
+      "nlog": {
+        "enabled": true
+      },
+      "elasticsearch": {
+        "enabled": false
+      }
+    },
+    "minLogLevel": "Trace",
+
+    "applications": {
+      "myAccount": {
+        "minLogLevel": "Trace",
+        "myApp": {
+          "minLogLevel": "Trace"
+        }
+      },
+      "minLogLevel": "Trace" //Min logging level for applications. Trace, Debug, Info, Warn, Error, Fatal
+    }
+
+  },
+  "tokens": {
+    "maxUserDataSize": 10240,
+    "randomAccount": {
+      "randomApp": {
+        "useNativeDateFormat": false // disable nativeDate format in tokens for randomAccount/randomApp
+      },
+      "useNativeDateFormat": true // enable nativeDate format in tokens for app in randomAccount different from randomAccount/randomApp
+    },
+    "useNativeDateFormat": false //// disable nativeDate format in all other accounts.
+  },
+
+  "plugins": {
+    "aws": {
+      "enabled": false
+    },
+    "lettuceEncrypt": {
+      "enabled": false,
+      // Which API type to use LettuceEncrypt with. Due to a current limitation, it cannot be enabled for both public and admin APIs.
+      // Valid values are "public" and "admin".
+      "apiType": "public",
+      // Email for certificate renewal (required)
+      "email": "email@email.com",
+      // Domain name(s) to request certificates for
+      "domainNames": [ "{loadBalancedIp}" ],
+      // Use Let's Encrypt staging server for issuing certificate. true for testing ; false for prod
+      "useStagingServer": true,
+      // Directory to be used to save LettuceEncrypt data. Required.
+      "certificateDirectory": "C:/strm-data/lettuceEncrypt",
+      // Show detailed LettuceEncrypt (and Kestrel) logs.
+      "showLogs": true
+    }
+  },
+
+  "debug": {
+    //Copies the content matching the pattern to the host directory before startup.
+    "host": {
+      //Copies host assemblies and Pdbs to the host directory to help debug. 
+      "additionalFiles": "{rootDirectory}/output/host/*.*"
+    }
+  },
+  "aliases": {
+    "diagnostics": true
+  }
+}

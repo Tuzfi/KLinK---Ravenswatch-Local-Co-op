@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Stormancer.Server.Common</name>
+    </assembly>
+    <members>
+        <member name="P:Stormancer.Server.Common.IInstanceOptions.ShouldOutputJson">
+            <summary>
+            Gets a boolean indicating if the command expect a json formatted result. 
+            </summary>
+        </member>
+        <member name="P:Stormancer.Server.Common.IInstanceOptions.Args">
+            <summary>
+            Gets Command arguments.
+            </summary>
+        </member>
+        <member name="P:Stormancer.Server.Common.IInstanceOptions.Config">
+            <summary>
+            The config to use for this instance
+            </summary>
+        </member>
+        <member name="P:Stormancer.Server.Common.IInstanceOptions.Options">
+            <summary>
+            Gets additional command options
+            </summary>
+        </member>
+        <member name="P:Stormancer.Server.Common.IInstanceOptions.Plugins">
+            <summary>
+            Gets the list of loaded plugins.
+            </summary>
+        </member>
+        <member name="P:Stormancer.Server.Common.IInstanceOptions.PackageSources">
+            <summary>
+            Package sources configured in the bootstrapper config. (bootstrapper.config.json)
+            </summary>
+        </member>
+        <member name="P:Stormancer.Server.Common.CommandResult.IsSuccess">
+            <summary>
+            Gets or sets a <see cref="T:System.Boolean"/> indicating if the command was successfully run.
+            </summary>
+        </member>
+        <member name="P:Stormancer.Server.Common.CommandResult.ErrorMsg">
+            <summary>
+            Gets or sets the error message is success is false.
+            </summary>
+        </member>
+        <member name="T:Stormancer.Server.Common.CommandResult`1">
+            <summary>
+            Standardized result of a CLI invocation.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="P:Stormancer.Server.Common.CommandResult`1.Result">
+            <summary>
+            Gets or sets the result if success is true.
+            </summary>
+        </member>
+        <member name="T:Stormancer.RegistrationExtensions">
+            <summary>
+            Stormancer <see cref="T:Autofac.Builder.IRegistrationBuilder`3"/> extensions.
+            </summary>
+        </member>
+        <member name="M:Stormancer.RegistrationExtensions.SingleInstanceOnNode``3(Autofac.Builder.IRegistrationBuilder{``0,``1,``2})">
+            <summary>
+            Sets the dependency as "single instance per cluster node."
+            </summary>
+            <typeparam name="TLimit"></typeparam>
+            <typeparam name="TActivatorData"></typeparam>
+            <typeparam name="TStyle"></typeparam>
+            <param name="registration"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Stormancer.AssemblyExtensions">
+            <summary>
+            IoC registration extensions to the <see cref="T:System.Reflection.Assembly"/> types
+            </summary>
+        </member>
+        <member name="M:Stormancer.AssemblyExtensions.RegisterDependencies(System.Reflection.Assembly,Autofac.ContainerBuilder)">
+            <summary>
+            Registers dependencies in the assembly.
+            </summary>
+            <param name="assembly"></param>
+            <param name="builder"></param>
+        </member>
+        <member name="P:Stormancer.AssemblyExtensions.ServicesSelectors">
+            <summary>
+            Gets additional services selectors from a given type.
+            </summary>
+            <remarks>
+            The default service selector selects all the interface annoted with <see cref="T:Stormancer.Platform.Core.Composition.DependencyAttribute"/>.
+            </remarks>
+        </member>
+        <member name="T:Stormancer.Cluster.Licensing.ILicense">
+            <summary>
+            Provides function to authorize features according to the license key
+            </summary>
+        </member>
+        <member name="M:Stormancer.Cluster.Licensing.ILicense.AuthorizeFeature(System.String)">
+            <summary>
+            Authorizes a feature against the configured licence key.
+            </summary>
+            <param name="featureId"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Stormancer.PipeReaderExtensions">
+            <summary>
+            Extensions for pipe reader.
+            </summary>
+        </member>
+        <member name="M:Stormancer.PipeReaderExtensions.TryCopyToAsync``1(System.IO.Pipelines.PipeReader,System.IO.Pipelines.PipeWriter,System.Boolean,System.Threading.CancellationToken,System.Action{System.Int64,``0},``0)">
+            <summary>
+            Copies a reader's content to a writer and notifies data copied.
+            </summary>
+            <param name="reader"></param>
+            <param name="writer"></param>
+            <param name="cancellationToken"></param>
+            <param name="completeOnEnd"></param>
+            <param name="onCopied"></param>
+            <param name="userState"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Stormancer.PipeReaderExtensions.CopyToAsync(System.IO.Pipelines.PipeReader,System.IO.Pipelines.PipeWriter,System.Int32)">
+            <summary>
+            Copies a reader's content to a writer and notifies data copied.
+            </summary>
+            <param name="reader"></param>
+            <param name="writer"></param>
+            <param name="count">number of bytes to copy.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Stormancer.PipeReaderExtensions.CopyToAsync(System.IO.Pipelines.PipeReader,System.IO.Stream,System.Int32)">
+            <summary>
+            Copies a reader's content to a writer and notifies data copied.
+            </summary>
+            <param name="reader"></param>
+            <param name="stream"></param>
+            <param name="count">number of bytes to copy.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
